@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Relevés de compte bancaire</h2>
+    <ul>
+        {% for statement in statements %}
+            <li>{{ statement.name }}
+                <a href="{{statement.file.url}}" target="_blank" rel="noopener noreferrer">Voir</a>
+                <a href="{{statement.id}}/delete/">Supprimer</a> 
+                </form>
+            </li>
+        {% endfor %}
+   </ul>
+
+   <a href="{% url 'upload_statement' %}">Uploader un relevé</a>
+
+   {% endblock %}
