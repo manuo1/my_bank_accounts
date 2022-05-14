@@ -1,4 +1,4 @@
 env
 .env
 infos
-db.sqlite
+db.sqlite3
