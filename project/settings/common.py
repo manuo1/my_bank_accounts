@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # added
     'authentication',
+    'bank_account_statements',
 ]
 
 MIDDLEWARE = [
