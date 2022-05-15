@@ -1,4 +1,4 @@
-from django.shortcuts import render
+
 from django.urls import reverse_lazy
 
 from django.views.generic import ListView, CreateView, DeleteView
@@ -15,7 +15,7 @@ class StatementListView(ListView):
     model = Statement
     template_name='statements_list.html'
     context_object_name="statements"
-    ordering = "bank__name", "date"
+    ordering = "date", "bank__name"
 
 class StatementUploadView(CreateView):
     model = Statement

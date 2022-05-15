@@ -4,7 +4,7 @@
     <h2>Relevés de compte bancaire</h2>
     <ul>
         {% for statement in statements %}
-            <li>{{ statement.name }}
+            <li>{{ statement }}
                 <a href="{{statement.file.url}}" target="_blank" rel="noopener noreferrer">Voir</a>
                 <a href="{{statement.id}}/delete/">Supprimer</a> 
                 </form>
@@ -12,6 +12,6 @@
         {% endfor %}
    </ul>
 
-   <a href="{% url 'upload_statement' %}">Uploader un relevé</a>
+   <a href="{% url 'upload_statement' %}">Ajouter un relevé</a>
 
    {% endblock %}
