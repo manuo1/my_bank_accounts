@@ -6,11 +6,6 @@ from django.views.generic import ListView, CreateView, DeleteView
 from bank_account_statements.forms import SatementForm
 from .models import Bank, Statement
 
-class BankListView(ListView):
-    model = Bank
-    template_name = "banks_list.html"
-    context_object_name="banks"
-
 class StatementListView(ListView):
     model = Statement
     template_name='statements_list.html'

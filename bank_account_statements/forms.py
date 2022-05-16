@@ -13,4 +13,5 @@ class SatementForm(forms.ModelForm):
         }
         widgets = {
             'bank': forms.RadioSelect,
+            'file': forms.ClearableFileInput,
         }

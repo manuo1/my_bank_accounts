@@ -10,8 +10,7 @@ Apps descriptions:
 
         management of pdf files of account statements:
         - upload 
-        - renaming
         - visualization
-        - import in the database
         - delete
-        - deleting linked data in the database in case of deleting the pdf file
+        - automatically populates the database with data from uploaded bank account statements
+        - automatically de-populates the database with data from deleted bank account statements
