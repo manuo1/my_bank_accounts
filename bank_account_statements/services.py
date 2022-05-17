@@ -2,7 +2,7 @@ import re
 import dateparser
 import pdfplumber
 
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 
 
@@ -11,7 +11,10 @@ from bank_account_statements.constants import (
     CA_HEADER_ROW_INDICATOR, 
     CA_NEW_BALANCE_KEY_WORD, 
     CA_NEW_ROW_INDICATOR, 
-    CA_OLD_BALANCE_KEY_WORD, 
+    CA_OLD_BALANCE_KEY_WORD,
+    CM_BALANCE_KEY_WORDS,
+    CM_COLUMNS_LABELS,
+    CM_ROWS_DATE_FORMAT, 
     DATE_FORMAT
     )
 
@@ -141,6 +144,103 @@ class CreditAgricolPdfStatement:
             return []
 
 class CreditMutuelPdfStatement:
+
+    def _formatted_list_is_valid(self, formatted_list, checksum):
+        operation_sum = 0
+        for row in formatted_list:
+            operation_sum += row[-1]
+        return operation_sum == checksum
+
+    def _format_list(self, all_rows):
+        formated_list = []
+        for row in all_rows:
+            value = row[4]
+            if row[3]:
+                value = f"-{row[3]}"
+            formated_list.append([dateparser.parse(row[0],languages=['fr']).date(), row[2] ,self._string_value_to_decimal(value)])
+        return formated_list
+
+    def _string_value_to_decimal(self, string_value):
+        value = None
+        string_value = string_value.replace('.', '').replace(',', '.')
+        if not string_value:
+            string_value = 0
+        try:
+            value = Decimal(string_value)
+        except InvalidOperation:
+            print(f"Impossible de convertir {string_value} en decimal")
+        return value
+
+    def _get_checksum(self, start_row, end_row):
+        start_value = (
+            self._string_value_to_decimal(start_row[4])
+            - self._string_value_to_decimal(start_row[3])
+        )
+        end_value = (
+            self._string_value_to_decimal(end_row[4])
+            - self._string_value_to_decimal(end_row[3])
+        )
+        return Decimal(end_value - start_value)
+
+    def _string_is_date(self, string_date):
+        try:
+            date = datetime.strptime(str(string_date), CM_ROWS_DATE_FORMAT)
+            return True
+        except ValueError:
+            return False
+
+    def _row_is_balance_row(self, row):
+        return CM_BALANCE_KEY_WORDS in row[0] and self._string_is_date(row[0][-10:])
     
+    def _get_start_and_end_rows(self, all_rows):
+        start_and_end_rows = []
+        for row_number,row in enumerate(all_rows):
+            if self._row_is_balance_row(row):
+                start_and_end_rows.append((row_number,row))
+                all_rows.pop(row_number)
+        if len(start_and_end_rows) == 2:
+            start_and_end_rows.sort()
+        del all_rows[start_and_end_rows[1][0]:]
+        return start_and_end_rows[0][1], start_and_end_rows[1][1]
+
+    def _group_multi_line_descriptions(self, page_rows):
+        while '' in [row[0] for row in page_rows]:
+            for row_number, row in enumerate(page_rows):
+                if row[0] == '':
+                    page_rows[row_number-1][2] = (
+                        str(page_rows[row_number-1][2])
+                        + " "
+                        + str(row[2])
+                    )
+                    page_rows.pop(row_number)
+                    break
+
+    def _row_is_lablel_row(self, row):
+        return row == CM_COLUMNS_LABELS
+
+    def _tables_in_pdf(self, pdf_path):
+        tables = []
+        with pdfplumber.open(pdf_path) as pdf:
+            for page in pdf.pages:
+                for table in page.extract_tables():
+                    tables.append(table)
+        return tables
+
+    def _get_all_rows_in_pdf(self, pdf_path):
+        page_rows = []
+        for table in self._tables_in_pdf(pdf_path):
+            for row in table:
+                if not self._row_is_lablel_row(row) and not row == ['']:
+                    page_rows.append(row)
+        return page_rows
+
     def get_transactions(self, pdf_path):
+        all_rows = self._get_all_rows_in_pdf(pdf_path)
+        self._group_multi_line_descriptions(all_rows)
+        start_row, end_row = self._get_start_and_end_rows(all_rows)
+        checksum = self._get_checksum(start_row, end_row)
+        formatted_list = self._format_list(all_rows)
+        if self._formatted_list_is_valid(formatted_list, checksum):
+            return formatted_list
         return []
+
