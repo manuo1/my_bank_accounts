@@ -6,12 +6,12 @@ from .models import Statement
 class SatementForm(forms.ModelForm):
     class Meta:
         model = Statement
-        fields = ('file', 'bank')
+        fields = ("file", "bank")
         labels = {
-            'file': 'Fichier PDF',
-            'bank': 'Choix de la Banque',
+            "file": "Fichier PDF",
+            "bank": "Choix de la Banque",
         }
         widgets = {
-            'bank': forms.RadioSelect,
-            'file': forms.ClearableFileInput,
+            "bank": forms.RadioSelect,
+            "file": forms.ClearableFileInput,
         }

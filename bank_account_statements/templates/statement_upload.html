@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Uploader le relevé bancaire</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <br><button type="submit" class="btn btn-primary">Upload</button>
-  </form>
+<h2>Uploader le relevé bancaire</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <br><button type="submit" class="btn btn-primary">Upload</button>
+</form>
 {% endblock %}
