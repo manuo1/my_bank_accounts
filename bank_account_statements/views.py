@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView
 
 from bank_account_statements.forms import SatementForm
-from .models import Bank, Statement
+from .models import Statement
 
 
 class StatementListView(ListView):

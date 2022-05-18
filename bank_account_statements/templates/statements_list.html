@@ -1,17 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Relevés de compte bancaire</h2>
-<ul>
-    {% for statement in statements %}
-    <li>{{ statement }}
-        <a href="{{statement.file.url}}" target="_blank" rel="noopener noreferrer">Voir</a>
-        <a href="{{statement.id}}/delete/">Supprimer</a>
-        </form>
-    </li>
-    {% endfor %}
-</ul>
 
-<a href="{% url 'upload_statement' %}">Ajouter un relevé</a>
+<button type="button" class="btn btn-primary" href="{% url 'upload_statement' %}">
+    Ajouter un relevé
+</button>
+
+
+{% for statement in statements %}
+<ul class="list-group list-group-horizontal">
+
+    <li class="list-group-item">{{ statement }}</li>
+    <li class="list-group-item">
+        <a href="{{statement.file.url}}" target="_blank" rel="noopener noreferrer">
+            <i class="bi bi-file-earmark-pdf"></i>
+        </a>
+    </li>
+
+    <li class="list-group-item">
+        <a href="{{statement.id}}/delete/">
+            <i class="bi bi-trash"></i>
+        </a>
+    </li>
+
+</ul>
+{% endfor %}
 
 {% endblock %}

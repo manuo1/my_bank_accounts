@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     # added
     "authentication",
     "bank_account_statements",
+    "categorization",
 ]
 
 

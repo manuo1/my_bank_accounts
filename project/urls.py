@@ -7,7 +7,8 @@ from decouple import config
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("authentication.urls")),
-    path("bank_data/", include("bank_account_statements.urls")),
+    path("statements/", include("bank_account_statements.urls")),
+    path("transactions/", include("categorization.urls")),
 ]
 
 # Add url to media files during development
