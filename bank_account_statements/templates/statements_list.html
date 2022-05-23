@@ -2,9 +2,8 @@
 
 {% block content %}
 
-<button type="button" class="btn btn-primary" href="{% url 'upload_statement' %}">
-    Ajouter un relevé
-</button>
+<a href="{% url 'upload_statement' %}" class="btn btn-primary">Ajouter un relevé</a>
+
 
 
 {% for statement in statements %}

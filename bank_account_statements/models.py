@@ -1,29 +1,20 @@
 from django.db import models
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save
 from bank_account_statements.constants import (
+    BANK_NAME_CHOICES,
     CREDIT_AGRICOLE,
-    CREDIT_MUTUEL,
-    DATEPARSER_ENGLISH_CODE,
     DATEPARSER_FRENCH_CODE,
+    FILENAME_DATE_FORMAT_CHOICES,
 )
+from bank_account_statements.mutators import create_transaction_with_statement
 from bank_account_statements.services import (
-    CreditAgricolPdfStatement,
-    CreditMutuelPdfStatement,
     get_date_in_filename,
-    get_base_date_format,
+    common_date_format,
 )
+from categorization.models import Category
 
 
 class Bank(models.Model):
-
-    FILENAME_DATE_FORMAT_CHOICES = [
-        (DATEPARSER_FRENCH_CODE, "Jour / Mois / Année"),
-        (DATEPARSER_ENGLISH_CODE, "Année / Mois / Jour"),
-    ]
-    BANK_NAME_CHOICES = [
-        (CREDIT_MUTUEL, CREDIT_MUTUEL),
-        (CREDIT_AGRICOLE, CREDIT_AGRICOLE),
-    ]
 
     name = models.CharField(
         unique=True,
@@ -49,7 +40,7 @@ class Statement(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"{get_base_date_format(self.date)} - {self.bank.name}"
+        return f"{common_date_format(self.date)} - {self.bank.name}"
 
     def save(self, *args, **kwargs):
         self.date = get_date_in_filename(self.file.name, self.bank.filename_date_format)
@@ -59,22 +50,7 @@ class Statement(models.Model):
 
 def statement_post_save(sender, instance, created, *args, **kwargs):
     if created:
-        instance_list = []
-        pdf_statement = CreditMutuelPdfStatement()
-
-        if instance.bank.name == CREDIT_AGRICOLE:
-            pdf_statement = CreditAgricolPdfStatement()
-
-        for transaction in pdf_statement.get_transactions(instance.file.path):
-            instance_list.append(
-                Transaction(
-                    statement=instance,
-                    date=transaction[0],
-                    label=transaction[1],
-                    value=transaction[2],
-                )
-            )
-        Transaction.objects.bulk_create(instance_list)
+        create_transaction_with_statement(instance)
 
 
 post_save.connect(statement_post_save, sender=Statement)
@@ -85,6 +61,9 @@ class Transaction(models.Model):
     date = models.DateField()
     label = models.CharField(max_length=255)
     value = models.DecimalField(max_digits=20, decimal_places=2)
+    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+    extended_label = models.CharField(max_length=255, blank=True)
+    custom_label = models.CharField(max_length=255, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.statement} - {get_base_date_format(self.date)} | {self.label} | {self.value}"
+        return f"{self.statement} - {common_date_format(self.date)} | {self.label} | {self.value}"

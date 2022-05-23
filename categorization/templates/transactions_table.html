@@ -1,0 +1,38 @@
+<table class="table table-sm table-hover" style="font-size: 0.7rem">
+    <thead>
+        <tr>
+            <th scope="col" class="text-center">Date</th>
+            <th scope="col" class="text-start">Libellé des opérations</th>
+            <th scope="col" class="text-start">Libellé personnalisé</th>
+            <th scope="col" class="text-center">Valeur</th>
+            <th scope="col" class="text-center">Catégorie</th>
+            <th scope="col" class="text-center">Relevé</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <td class="text-center">{{ transaction.date|date:"d/m/Y" }}</td>
+            <td class="text-start" data-bs-toggle="tooltip" title="{{ transaction.label }}">
+                {{ transaction.label|truncatechars:70 }}
+            </td>
+            <td class="text-start"></td> {{ custom_label }} </td>
+            <td class="text-end">{{ transaction.value }}</td>
+            <td class="text-center">
+                {% if transaction.category %}
+                {{ transaction.category }}
+                {% else %}
+                <a href="{% url 'category_keyword_create' transaction.id %}" role="button">
+                    <i class="bi bi-plus-square"></i>
+                </a>
+                {% endif %}
+            </td>
+            <td class="text-center">
+                <a href="{{transaction.statement.file.url}}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-file-earmark-pdf"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -3,38 +3,15 @@
 {% block content %}
 {% include "pagination.html" %}
 
-<table class="table table-sm table-hover" style="font-size: 0.7rem">
-    <thead>
-        <tr>
-            <th scope="col" class="text-center">Date</th>
-            <th scope="col" class="text-start">Libellé des opérations</th>
-            <th scope="col" class="text-center">Valeur</th>
-            <th scope="col" class="text-center">Catégorie</th>
-            <th scope="col" class="text-center">Relevé</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for transaction in transactions %}
-        <tr>
-            <td class="text-center">{{ transaction.date|date:"d/m/Y" }}</td>
-            <td class="text-start" data-bs-toggle="tooltip" title="{{ transaction.label }}">
-                {{ transaction.label|truncatechars:50 }}
-            </td>
-            <td class="text-end">{{ transaction.value }}</td>
-            <td class="text-center">?</td>
-            <td class="text-center">
-                <a href="{{transaction.statement.file.url}}" target="_blank" rel="noopener noreferrer">
-                    <i class="bi bi-file-earmark-pdf"></i>
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<p class="muted"><a data-bs-toggle="tooltip" title="{{ transaction.label }}">{{ transaction.label|truncatechars:9 }}</a>
-</p>
-
-
+<div class="container">
+    <div class="row align-items-start">
+        <div class="col-9">
+            {% include "transactions_table.html" %}
+        </div>
+        <div class="col-3">
+            {% include "categories_list.html" %}
+        </div>
+    </div>
+</div>
 {% include "pagination.html" %}
 {% endblock %}

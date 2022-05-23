@@ -1,16 +1,24 @@
 DATE_FORMAT = "%d/%m/%Y"
 
 ##############################################################################
-# banks
-##############################################################################
-CREDIT_AGRICOLE = "Crédit Agricole"
-CREDIT_MUTUEL = "Crédit Mutuel"
-
-##############################################################################
 # dateparser
 ##############################################################################
 DATEPARSER_FRENCH_CODE = "fr"
 DATEPARSER_ENGLISH_CODE = "en"
+
+##############################################################################
+# banks data
+##############################################################################
+CREDIT_AGRICOLE = "Crédit Agricole"
+CREDIT_MUTUEL = "Crédit Mutuel"
+FILENAME_DATE_FORMAT_CHOICES = [
+    (DATEPARSER_FRENCH_CODE, "Jour / Mois / Année"),
+    (DATEPARSER_ENGLISH_CODE, "Année / Mois / Jour"),
+]
+BANK_NAME_CHOICES = [
+    (CREDIT_MUTUEL, CREDIT_MUTUEL),
+    (CREDIT_AGRICOLE, CREDIT_AGRICOLE),
+]
 
 ##############################################################################
 # specific to data extraction in credit agricole statements
@@ -27,6 +35,5 @@ CA_NEW_BALANCE_KEY_WORD = "Nouveau solde"
 ##############################################################################
 
 CM_COLUMNS_LABELS = ["Date", "Date valeur", "Opération", "Débit EUROS", "Crédit EUROS"]
-
 CM_BALANCE_KEY_WORDS = "SOLDE"
 CM_ROWS_DATE_FORMAT = "%d/%m/%Y"

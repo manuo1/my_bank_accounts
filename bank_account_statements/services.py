@@ -25,7 +25,7 @@ def get_date_in_filename(filename, date_formats):
         return dateparser.parse(raw_date[0], languages=[date_formats])
 
 
-def get_base_date_format(date):
+def common_date_format(date):
     if date:
         return date.strftime(DATE_FORMAT)
 

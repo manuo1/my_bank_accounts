@@ -1,0 +1,22 @@
+<div class="d-grid gap-2">
+    <a class="btn btn-success" href="{% url 'category_create' %}" role="button">Ajouter une catégorie</a>
+
+    <div class="btn-group-vertical">
+        <a class="btn btn-outline-primary {% if filter == 'all' %}active{% endif %}"
+            href="{% url 'transactions_list' 'all' %}" role="button">
+            Toutes les catégories
+        </a>
+        <a class="btn btn-outline-primary {% if filter == 'uncategorized' %}active{% endif %}"
+            href="{% url 'transactions_list' 'uncategorized' %}" role="button">
+            Sans catégorie
+        </a>
+
+        {% for category in categories %}
+        <a class="btn btn-outline-primary {% if category_id == category.id %}active{% endif %}"
+            href="{% url 'categorized_transactions_list' category.id%}" role="button">
+            {{category.name}}
+        </a>
+        {% endfor %}
+
+    </div>
+</div>
