@@ -70,7 +70,9 @@ class Transaction(models.Model):
     date = models.DateField()
     label = models.CharField(max_length=255)
     value = models.DecimalField(max_digits=20, decimal_places=2)
-    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(
+        Category, blank=True, null=True, on_delete=models.SET_NULL
+    )
     extended_label = models.CharField(max_length=255, blank=True)
     custom_label = models.CharField(max_length=255, blank=True)
 
