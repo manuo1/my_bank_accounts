@@ -1,8 +1,12 @@
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from bank_account_statements.models import Transaction
-from categorization.forms import CategoryKeywordForm, CategoryForm
+from categorization.forms import (
+    CategoryKeywordForm,
+    CategoryForm,
+    TransactionCustomLabelForm,
+)
 from categorization.models import Category, CategoryKeyword
 
 
@@ -16,7 +20,7 @@ class TransactionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.order_by("name")
+        context["categories"] = Category.objects.all()
         context["filter"] = self.kwargs.get("filter")
         context["category_id"] = self.kwargs.get("category_id")
         return context
@@ -26,19 +30,20 @@ class TransactionListView(ListView):
         category_id = self.kwargs.get("category_id")
 
         if filter == "all":
-            return self.model.objects.order_by("-date", "label")
+            return self.model.objects.all()
         if filter == "uncategorized":
-            return self.model.objects.filter(category__isnull=True).order_by(
-                "-date", "label"
-            )
+            return self.model.objects.filter(category__isnull=True)
         if filter:
-            return self.model.objects.filter(extended_label__icontains=filter).order_by(
-                "-date", "label"
-            )
+            return self.model.objects.filter(extended_label__icontains=filter)
         if category_id:
-            return self.model.objects.filter(category__id=category_id).order_by(
-                "-date", "label"
-            )
+            return self.model.objects.filter(category__id=category_id)
+
+
+class TransactionCustomLabelUpdateView(UpdateView):
+    model = Transaction
+    form_class = TransactionCustomLabelForm
+    success_url = reverse_lazy("transactions_list", args=["all"])
+    template_name = "transaction_custom_label_update.html"
 
 
 class CategoryCreateView(CreateView):

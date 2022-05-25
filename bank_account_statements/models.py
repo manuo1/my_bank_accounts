@@ -10,8 +10,10 @@ from bank_account_statements.mutators import create_transaction_with_statement
 from bank_account_statements.services import (
     get_date_in_filename,
     common_date_format,
+    transaction_extended_label,
 )
 from categorization.models import Category
+from categorization.mutators import update_transactions_category
 
 
 class Bank(models.Model):
@@ -28,6 +30,9 @@ class Bank(models.Model):
         default=DATEPARSER_FRENCH_CODE,
     )
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self) -> str:
         return self.name
 
@@ -38,6 +43,9 @@ class Statement(models.Model):
     file = models.FileField(upload_to="bank_statements", max_length=500)
     date = models.DateField()
     create_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date", "bank"]
 
     def __str__(self) -> str:
         return f"{common_date_format(self.date)} - {self.bank.name}"
@@ -51,6 +59,7 @@ class Statement(models.Model):
 def statement_post_save(sender, instance, created, *args, **kwargs):
     if created:
         create_transaction_with_statement(instance)
+        update_transactions_category()
 
 
 post_save.connect(statement_post_save, sender=Statement)
@@ -65,5 +74,19 @@ class Transaction(models.Model):
     extended_label = models.CharField(max_length=255, blank=True)
     custom_label = models.CharField(max_length=255, blank=True)
 
+    class Meta:
+        ordering = ["-date", "label"]
+
     def __str__(self) -> str:
         return f"{self.statement} - {common_date_format(self.date)} | {self.label} | {self.value}"
+
+    def save(self, *args, **kwargs):
+        self.extended_label = transaction_extended_label(
+            label=self.label,
+            custom_label=self.custom_label,
+            value=self.value,
+            date=self.date,
+            statement_bank_name=self.statement.bank.name,
+        )
+        super().save(*args, **kwargs)
+        update_transactions_category()

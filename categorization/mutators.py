@@ -1,4 +1,5 @@
 import bank_account_statements.models
+from bank_account_statements.services import unaccent
 import categorization.models
 
 
@@ -7,7 +8,7 @@ def update_transactions_category():
     category_keywords = categorization.models.CategoryKeyword.objects.all()
     for transaction in transactions:
         for category_keyword in category_keywords:
-            if category_keyword.keyword in transaction.extended_label:
+            if category_keyword.keyword in unaccent(transaction.extended_label).lower():
                 if transaction.category != category_keyword.category:
                     transaction.category = category_keyword.category
 

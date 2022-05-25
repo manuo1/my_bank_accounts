@@ -2,15 +2,15 @@
 
 {% block content %}
 <h2>Ajouter un mot clé à une Catégorie</h2>
-{{label}}
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
+  {{ form.keyword.errors }}
   <div class="input-group mb-3">
     <span class="input-group-text" id="inputGroup-sizing-default">{{ form.keyword.label }}</span>
     <input id="id_keyword" type="text" class="form-control" aria-label="key_word input"
       aria-describedby="inputGroup-sizing-default" value="{{ form.keyword.value }}" name="keyword">
   </div>
-
+  {{ form.category.errors }}
   <div class="input-group mb-3">
     <label class="input-group-text" for="id_category">{{ form.category.label }}</label>
     <select class="form-select" id="id_category" name="category">

@@ -16,18 +16,36 @@ from bank_account_statements.constants import (
     CM_COLUMNS_LABELS,
     CM_ROWS_DATE_FORMAT,
     DATE_FORMAT,
+    USELESS_WORDS_AT_THE_START_OF_THE_LABEL as USELESS_WORDS,
 )
+
+
+def unaccent(raw_text):
+    raw_text = re.sub("[àáâãäå]", "a", raw_text)
+    raw_text = re.sub("[èéêë]", "e", raw_text)
+    raw_text = re.sub("[ìíîï]", "i", raw_text)
+    raw_text = re.sub("[òóôõö]", "o", raw_text)
+    raw_text = re.sub("[ùúûü]", "u", raw_text)
+    return raw_text
+
+
+def common_date_format(date):
+    if date:
+        return date.strftime(DATE_FORMAT)
+
+
+def transaction_extended_label(label, custom_label, value, date, statement_bank_name):
+    if label.split()[0].lower() in USELESS_WORDS:
+        label = " ".join([w for w in label.split()[1:]])
+    if custom_label:
+        label = f"{custom_label} {label}"
+    return f"{label} {value} {common_date_format(date)} {statement_bank_name}"
 
 
 def get_date_in_filename(filename, date_formats):
     raw_date = re.findall("\d{1,4}[-/_]\d{1,4}[-/_]\d{1,4}", filename)
     if raw_date and date_formats:
         return dateparser.parse(raw_date[0], languages=[date_formats])
-
-
-def common_date_format(date):
-    if date:
-        return date.strftime(DATE_FORMAT)
 
 
 class CreditAgricolPdfStatement:

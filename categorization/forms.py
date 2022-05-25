@@ -1,4 +1,5 @@
 from django import forms
+from bank_account_statements.models import Transaction
 
 from categorization.models import Category, CategoryKeyword
 
@@ -19,4 +20,13 @@ class CategoryKeywordForm(forms.ModelForm):
         labels = {
             "keyword": "Mot clé",
             "category": "Catégorie",
+        }
+
+
+class TransactionCustomLabelForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ("custom_label",)
+        labels = {
+            "custom_label": "Libellé personnalisé",
         }

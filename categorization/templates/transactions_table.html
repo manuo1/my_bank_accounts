@@ -1,22 +1,36 @@
 <table class="table table-sm table-hover" style="font-size: 0.7rem">
     <thead>
         <tr>
-            <th scope="col" class="text-center">Date</th>
-            <th scope="col" class="text-start">Libellé des opérations</th>
-            <th scope="col" class="text-start">Libellé personnalisé</th>
-            <th scope="col" class="text-center">Valeur</th>
-            <th scope="col" class="text-center">Catégorie</th>
-            <th scope="col" class="text-center">Relevé</th>
+            <th scope="col-2" class="text-center">Date</th>
+            <th scope="col-3" class="text-start">Libellé des opérations</th>
+            <th scope="col-3" class="text-start">Libellé personnalisé</th>
+            <th scope="col-1" class="text-center">Valeur</th>
+            <th scope="col-2" class="text-center">Catégorie</th>
+            <th scope="col-1" class="text-center">Relevé</th>
         </tr>
     </thead>
     <tbody>
         {% for transaction in transactions %}
-        <tr>
+        <tr
+            class="{% if transaction.statement.bank.name == 'Crédit Agricole' %}table-success{% else %}table-danger{% endif %}">
             <td class="text-center">{{ transaction.date|date:"d/m/Y" }}</td>
             <td class="text-start" data-bs-toggle="tooltip" title="{{ transaction.label }}">
-                {{ transaction.label|truncatechars:70 }}
+                {{ transaction.label|truncatechars:50 }}
             </td>
-            <td class="text-start"></td> {{ custom_label }} </td>
+
+            <td>
+                <div class="row">
+                    <div class="col text-start">
+                        {{ transaction.custom_label }}
+                    </div>
+                    <div class="col-2 text-start">
+                        <a href="{% url 'edit_transaction_custom_label' transaction.id %}" role="button">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </td>
             <td class="text-end">{{ transaction.value }}</td>
             <td class="text-center">
                 {% if transaction.category %}

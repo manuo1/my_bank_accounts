@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{label}}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="inputGroup-sizing-default">{{ form.custom_label.label }}</span>
+    <input id="id_custom_label" type="text" class="form-control" aria-label="custom_label input"
+      aria-describedby="inputGroup-sizing-default" value="{{ form.custom_label.value }}" name="custom_label">
+  </div>
+  <br><button type="submit" class="btn btn-primary">Ajouter</button>
+</form>
+{% endblock %}
