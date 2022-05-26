@@ -25,25 +25,27 @@ class TransactionListView(ListView):
             name=UNCATEGORIZABLE_TRANSACTION_CATEGORY_NAME
         )[0]
         context["categories"] = Category.objects.all()
-        context["filter"] = self.kwargs.get("filter")
-        context["category_id"] = self.kwargs.get("category_id")
+        context["category_value"] = self.kwargs.get("category_value")
         context["current_url"] = self.request.path
         return context
 
     def get_queryset(self):
-        filter = self.kwargs.get("filter")
-        category_id = self.kwargs.get("category_id")
+        queryset = self.model.objects.none()
+        search = self.kwargs.get("search")
+        category_value = self.kwargs.get("category_value", "all")
+        if category_value.isdigit():
+            queryset = self.model.objects.filter(category__id=category_value)
+        else:
+            if category_value == "all":
+                queryset = self.model.objects.all()
+            if category_value == "uncategorized":
+                queryset = self.model.objects.filter(category__isnull=True)
 
-        if filter == "all":
-            return self.model.objects.all()
-        if filter == "uncategorized":
-            return self.model.objects.filter(category__isnull=True)
-        if filter:
-            return self.model.objects.filter(
-                extended_label__icontains=filter.replace(",", ".").replace("_", "/")
+        if search:
+            queryset = queryset.filter(
+                extended_label__icontains=search.replace(",", ".").replace("_", "/")
             )
-        if category_id:
-            return self.model.objects.filter(category__id=category_id)
+        return queryset
 
 
 class TransactionCustomLabelUpdateView(UpdateView):

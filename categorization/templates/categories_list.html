@@ -5,17 +5,17 @@
     </a>
 
     <div class="btn-group-vertical">
-        <a class="btn btn-outline-primary {% if filter == 'all' %}active{% endif %}"
+        <a class="btn btn-outline-primary {% if category_value == 'all' %}active{% endif %}"
             href="{% url 'transactions_list' 'all' %}" role="button">
             Toutes les catégories
         </a>
-        <a class="btn btn-outline-primary {% if filter == 'uncategorized' %}active{% endif %}"
+        <a class="btn btn-outline-primary {% if category_value == 'uncategorized' %}active{% endif %}"
             href="{% url 'transactions_list' 'uncategorized' %}" role="button">
             Sans catégorie
         </a>
         {% for category in categories %}
-        <a class="btn btn-outline-primary {% if category_id == category.id %}active{% endif %}"
-            href="{% url 'categorized_transactions_list' category.id%}" role="button">
+        <a class="btn btn-outline-primary {% if category_value == category.id|stringformat:'i' %}active{% endif %}"
+            href="{% url 'transactions_list' category.id%}" role="button">
             {{category.name}}
         </a>
         {% endfor %}
