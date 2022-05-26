@@ -39,7 +39,9 @@ class TransactionListView(ListView):
         if filter == "uncategorized":
             return self.model.objects.filter(category__isnull=True)
         if filter:
-            return self.model.objects.filter(extended_label__icontains=filter)
+            return self.model.objects.filter(
+                extended_label__icontains=filter.replace(",", ".").replace("_", "/")
+            )
         if category_id:
             return self.model.objects.filter(category__id=category_id)
 

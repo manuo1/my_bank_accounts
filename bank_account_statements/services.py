@@ -39,7 +39,7 @@ def transaction_extended_label(label, custom_label, value, date, statement_bank_
         label = " ".join([w for w in label.split()[1:]])
     if custom_label:
         label = f"{custom_label} {label}"
-    return f"{label} {value} {common_date_format(date)} {statement_bank_name}"
+    return f"{unaccent(label)} {value} {common_date_format(date)} {unaccent(statement_bank_name)}"
 
 
 def get_date_in_filename(filename, date_formats):
