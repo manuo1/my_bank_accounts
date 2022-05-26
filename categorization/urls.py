@@ -10,7 +10,12 @@ from categorization.views import (
 
 urlpatterns = [
     path(
-        "<str:filter>",
+        "category/<str:category_value>",
+        TransactionListView.as_view(),
+        name="transactions_list",
+    ),
+    path(
+        "category/<str:category>/search/<str:search>/",
         TransactionListView.as_view(),
         name="transactions_list",
     ),
@@ -19,12 +24,7 @@ urlpatterns = [
         TransactionCustomLabelUpdateView.as_view(),
         name="edit_transaction_custom_label",
     ),
-    path(
-        "category/<int:category_id>",
-        TransactionListView.as_view(),
-        name="categorized_transactions_list",
-    ),
-    path("category/create/", CategoryCreateView.as_view(), name="category_create"),
+    path("category/create", CategoryCreateView.as_view(), name="category_create"),
     path(
         "category_keyword/add_with_transaction_label/<int:transaction_id>",
         CategoryKeywordCreateView.as_view(),
