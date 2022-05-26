@@ -1,6 +1,7 @@
 from django.urls import path
 
 from categorization.views import (
+    CategoryDeleteView,
     CategoryKeywordCreateView,
     CategoryCreateView,
     TransactionCustomLabelUpdateView,
@@ -14,6 +15,11 @@ urlpatterns = [
         name="transactions_list",
     ),
     path(
+        "<pk>/edit_custom_label",
+        TransactionCustomLabelUpdateView.as_view(),
+        name="edit_transaction_custom_label",
+    ),
+    path(
         "category/<int:category_id>",
         TransactionListView.as_view(),
         name="categorized_transactions_list",
@@ -25,8 +31,8 @@ urlpatterns = [
         name="category_keyword_create",
     ),
     path(
-        "<pk>/edit_custom_label",
-        TransactionCustomLabelUpdateView.as_view(),
-        name="edit_transaction_custom_label",
+        "category/<pk>/delete",
+        CategoryDeleteView.as_view(),
+        name="delete_category",
     ),
 ]

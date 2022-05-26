@@ -24,7 +24,8 @@
                         {{ transaction.custom_label }}
                     </div>
                     <div class="col-2 text-start">
-                        <a href="{% url 'edit_transaction_custom_label' transaction.id %}" role="button">
+                        <a href="{% url 'edit_transaction_custom_label' transaction.id %}?next={{current_url}}"
+                            role="button">
                             <i class="bi bi-pencil-square"></i>
                         </a>
                     </div>
