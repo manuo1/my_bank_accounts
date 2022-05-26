@@ -1,6 +1,8 @@
 <div class="d-grid gap-2">
-    <a class="btn btn-success" href="{% url 'category_create' %}" role="button">Ajouter une catégorie</a>
-    <a class="btn btn-danger" href="{% url 'delete_category' uncategorizable.id%}" role="button">
+    <a class="btn btn-success" href="{% url 'category_create' %}?next={{current_url}}" role="button">
+        Ajouter une catégorie
+    </a>
+    <a class="btn btn-danger" href="{% url 'delete_category' uncategorizable.id%}?next={{current_url}}" role="button">
         Reset {{uncategorizable.name}}
     </a>
 
@@ -22,3 +24,17 @@
 
     </div>
 </div>
+
+
+
+
+<!-- 
+   <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+      Dropdown button
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+      <li><a class="dropdown-item active" href="#">Action</a></li>
+    </ul>
+  </div>
+   -->

@@ -1,0 +1,7 @@
+{% if transaction.category %}
+{{ transaction.category }}
+{% else %}
+<a href="{% url 'category_keyword_create' transaction.id %}" role="button">
+    <i class="bi bi-plus-square"></i>
+</a>
+{% endif %}

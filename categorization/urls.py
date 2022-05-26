@@ -15,11 +15,6 @@ urlpatterns = [
         name="transactions_list",
     ),
     path(
-        "category/<str:category>/search/<str:search>/",
-        TransactionListView.as_view(),
-        name="transactions_list",
-    ),
-    path(
         "<pk>/edit_custom_label",
         TransactionCustomLabelUpdateView.as_view(),
         name="edit_transaction_custom_label",

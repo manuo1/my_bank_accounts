@@ -16,8 +16,6 @@ class TransactionListView(ListView):
     template_name = "transactions_list.html"
     context_object_name = "transactions"
     paginate_by = 100
-    search = None
-    category_filter = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -26,20 +24,19 @@ class TransactionListView(ListView):
         )[0]
         context["categories"] = Category.objects.all()
         context["category_value"] = self.kwargs.get("category_value")
-        context["current_url"] = self.request.path
+        context["current_url"] = self.request.get_full_path
         return context
 
     def get_queryset(self):
         queryset = self.model.objects.none()
-        search = self.kwargs.get("search")
+        search = self.request.GET.get("search")
         category_value = self.kwargs.get("category_value", "all")
         if category_value.isdigit():
-            queryset = self.model.objects.filter(category__id=category_value)
-        else:
-            if category_value == "all":
-                queryset = self.model.objects.all()
-            if category_value == "uncategorized":
-                queryset = self.model.objects.filter(category__isnull=True)
+            queryset = self.model.objects.filter(category__id=int(category_value))
+        if category_value == "all":
+            queryset = self.model.objects.all()
+        if category_value == "uncategorized":
+            queryset = self.model.objects.filter(category__isnull=True)
 
         if search:
             queryset = queryset.filter(
@@ -67,6 +64,12 @@ class CategoryCreateView(CreateView):
     success_url = reverse_lazy("transactions_list", args=["uncategorized"])
     template_name = "category_create.html"
 
+    def get_success_url(self):
+        next_url = self.request.GET.get("next", None)
+        if next_url:
+            return "%s" % (next_url)
+        return str(self.success_url)
+
 
 class CategoryKeywordCreateView(CreateView):
     model = CategoryKeyword
@@ -85,8 +88,20 @@ class CategoryKeywordCreateView(CreateView):
         )
         return initial
 
+    def get_success_url(self):
+        next_url = self.request.GET.get("next", None)
+        if next_url:
+            return "%s" % (next_url)
+        return str(self.success_url)
+
 
 class CategoryDeleteView(DeleteView):
     model = Category
     template_name = "category_confirm_delete.html"
     success_url = reverse_lazy("transactions_list", args=["all"])
+
+    def get_success_url(self):
+        next_url = self.request.GET.get("next", None)
+        if next_url:
+            return "%s" % (next_url)
+        return str(self.success_url)

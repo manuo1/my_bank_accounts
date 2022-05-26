@@ -1,52 +1,28 @@
 <table class="table table-sm table-hover" style="font-size: 0.7rem">
     <thead>
         <tr>
-            <th scope="col-2" class="text-center">Date</th>
-            <th scope="col-3" class="text-start">Libellé des opérations</th>
-            <th scope="col-3" class="text-start">Libellé personnalisé</th>
-            <th scope="col-1" class="text-center">Valeur</th>
-            <th scope="col-2" class="text-center">Catégorie</th>
-            <th scope="col-1" class="text-center">Relevé</th>
+            <th scope="col" class="text-center"></th>
+            <th scope="col" class="text-center">Date</th>
+            <th scope="col" class="text-start">Libellé des opérations</th>
+            <th scope="col" class="text-start">Libellé personnalisé</th>
+            <th scope="col" class="text-center">Valeur</th>
+            <th scope="col" class="text-center">Catégorie</th>
+            <th scope="col" class="text-center">Relevé</th>
         </tr>
     </thead>
     <tbody>
         {% for transaction in transactions %}
         <tr
-            class="{% if transaction.statement.bank.name == 'Crédit Agricole' %}table-success{% else %}table-danger{% endif %}">
+            class="table-{% if transaction.statement.bank.name == 'Crédit Agricole' %}success{% else %}danger{% endif %}">
+            <td>cb</td>
             <td class="text-center">{{ transaction.date|date:"d/m/Y" }}</td>
             <td class="text-start" data-bs-toggle="tooltip" title="{{ transaction.label }}">
                 {{ transaction.label|truncatechars:50 }}
             </td>
-
-            <td>
-                <div class="row">
-                    <div class="col text-start">
-                        {{ transaction.custom_label }}
-                    </div>
-                    <div class="col-2 text-start">
-                        <a href="{% url 'edit_transaction_custom_label' transaction.id %}?next={{current_url}}"
-                            role="button">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                    </div>
-
-                </div>
-            </td>
-            <td class="text-end">{{ transaction.value }}</td>
-            <td class="text-center">
-                {% if transaction.category %}
-                {{ transaction.category }}
-                {% else %}
-                <a href="{% url 'category_keyword_create' transaction.id %}" role="button">
-                    <i class="bi bi-plus-square"></i>
-                </a>
-                {% endif %}
-            </td>
-            <td class="text-center">
-                <a href="{{transaction.statement.file.url}}" target="_blank" rel="noopener noreferrer">
-                    <i class="bi bi-file-earmark-pdf"></i>
-                </a>
-            </td>
+            <td class="text-center">{% include "transactions_table_row_column_custom_label.html" %}</td>
+            <td class="text-end"> {{ transaction.value }}</td>
+            <td class="text-center">{% include "transactions_table_row_column_category.html" %}</td>
+            <td class="text-center">{% include "transactions_table_row_column_statement.html" %}</td>
         </tr>
         {% endfor %}
     </tbody>
