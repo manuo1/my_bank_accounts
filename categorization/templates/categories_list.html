@@ -2,10 +2,6 @@
     <a class="btn btn-success" href="{% url 'category_create' %}?next={{current_url}}" role="button">
         Ajouter une catégorie
     </a>
-    <a class="btn btn-danger" href="{% url 'delete_category' uncategorizable.id%}?next={{current_url}}" role="button">
-        Reset {{uncategorizable.name}}
-    </a>
-
     <div class="btn-group-vertical">
         <a class="btn btn-outline-primary {% if category_value == 'all' %}active{% endif %}"
             href="{% url 'transactions_list' 'all' %}" role="button">

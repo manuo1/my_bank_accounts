@@ -1,0 +1,17 @@
+<form id="uncategorizable_form" action="{% url 'transactions_list' 'uncategorized' %}"
+    action="{% url 'transactions_list' '{{ uncategorizable.id }}' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" value="{{transaction.id}}" name="transaction_id">
+    {% if transaction.category is None %}
+    <i onclick="submit_form()" class="bi bi-bookmark-plus-fill text-success"></i>
+    {% endif %}
+    {% if transaction.category.id == uncategorizable.id %}
+    <i onclick="submit_form()" class="bi bi-bookmark-dash-fill text-danger"></i>
+    {% endif %}
+</form>
+<script>
+    function submit_form() {
+        var form = document.getElementById("uncategorizable_form");
+        form.submit();
+    }
+</script>

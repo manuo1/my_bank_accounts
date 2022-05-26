@@ -1,7 +1,7 @@
 <table class="table table-sm table-hover" style="font-size: 0.7rem">
     <thead>
         <tr>
-            <th scope="col" class="text-center"></th>
+            <th></th>
             <th scope="col" class="text-center">Date</th>
             <th scope="col" class="text-start">Libellé des opérations</th>
             <th scope="col" class="text-start">Libellé personnalisé</th>
@@ -11,10 +11,12 @@
         </tr>
     </thead>
     <tbody>
+
         {% for transaction in transactions %}
         <tr
             class="table-{% if transaction.statement.bank.name == 'Crédit Agricole' %}success{% else %}danger{% endif %}">
-            <td>cb</td>
+            <td class="text-center form-switch-sm">{% include "transactions_table_row_column_checkbox.html" %}
+            </td>
             <td class="text-center">{{ transaction.date|date:"d/m/Y" }}</td>
             <td class="text-start" data-bs-toggle="tooltip" title="{{ transaction.label }}">
                 {{ transaction.label|truncatechars:50 }}
@@ -25,5 +27,6 @@
             <td class="text-center">{% include "transactions_table_row_column_statement.html" %}</td>
         </tr>
         {% endfor %}
+
     </tbody>
 </table>
