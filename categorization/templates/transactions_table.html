@@ -15,7 +15,8 @@
         {% for transaction in transactions %}
         <tr
             class="table-{% if transaction.statement.bank.name == 'Crédit Agricole' %}success{% else %}danger{% endif %}">
-            <td class="text-center form-switch-sm">{% include "transactions_table_row_column_checkbox.html" %}
+            <td class="text-center  m-0 p-0">
+                {% include "transactions_table_row_column_toogle_uncategorizable.html" %}
             </td>
             <td class="text-center">{{ transaction.date|date:"d/m/Y" }}</td>
             <td class="text-start" data-bs-toggle="tooltip" title="{{ transaction.label }}">

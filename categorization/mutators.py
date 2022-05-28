@@ -33,8 +33,7 @@ def toggle_between_none_and_uncategorisable(transaction):
             id=transaction.id
         ).update(category=uncategorizable)
 
-    # desactivated, bugged function set to uncategorizable the wrong transaction
-    # if transaction.category == uncategorizable:
-    #     bank_account_statements.models.Transaction.objects.filter(
-    #         id=transaction.id
-    #     ).update(category=None)
+    if transaction.category == uncategorizable:
+        bank_account_statements.models.Transaction.objects.filter(
+            id=transaction.id
+        ).update(category=None)

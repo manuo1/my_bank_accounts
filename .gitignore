@@ -4,3 +4,4 @@ infos
 db.sqlite3
 media
 __pycache__
+launch.json
