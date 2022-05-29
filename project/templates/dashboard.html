@@ -22,7 +22,8 @@
                 <td class="text-end">
                     {% for month_data_category in month_data.data %}
                     {% if month_data_category == category%}
-                    <a class="text-decoration-none" href=" {% url 'transactions_list' category.id%}">
+                    <a class="text-decoration-none"
+                        href=" {% url 'transactions_list' category.id%}?date_start={{month_data.first_date|date:'Y-m-d'}}&date_end={{month_data.last_date|date:'Y-m-d'}}">
                         {{month_data_category.sum_value|floatformat:2}} €
                     </a>
                     {% endif %}

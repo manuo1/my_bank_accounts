@@ -44,6 +44,8 @@ class TransactionListView(ListView):
     def get_queryset(self):
         queryset = self.model.objects.none()
         search = self.request.GET.get("search")
+        date_start = self.request.GET.get("date_start")
+        date_end = self.request.GET.get("date_end")
         category_value = self.kwargs.get("category_value", "all")
         if category_value.isdigit():
             queryset = self.model.objects.filter(category__id=int(category_value))
@@ -55,6 +57,11 @@ class TransactionListView(ListView):
             queryset = queryset.filter(
                 extended_label__icontains=search.replace(",", ".").replace("_", "/")
             )
+        if date_start:
+            queryset = queryset.filter(date__gte=date_start)
+        if date_end:
+            queryset = queryset.filter(date__lt=date_end)
+
         return queryset
 
     def post(self, request, *args, **kwargs):
