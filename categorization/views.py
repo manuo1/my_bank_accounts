@@ -1,8 +1,11 @@
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from bank_account_statements.models import Transaction
-from categorization.constants import UNCATEGORIZABLE_TRANSACTION_CATEGORY_NAME
+from categorization.constants import (
+    SALARIES_CATEGORY_NAME,
+    UNCATEGORIZABLE_TRANSACTION_CATEGORY_NAME,
+)
 from categorization.forms import (
     CategoryKeywordForm,
     CategoryForm,
@@ -12,6 +15,7 @@ from categorization.models import Category, CategoryKeyword
 from categorization.mutators import (
     toggle_between_none_and_uncategorisable as toggle_category,
 )
+from categorization.selectors import get_monthly_data
 
 
 class TransactionListView(ListView):
@@ -22,6 +26,7 @@ class TransactionListView(ListView):
     uncategorizable = None
 
     def __init__(self, **kwargs):
+        Category.objects.get_or_create(name=SALARIES_CATEGORY_NAME)
         self.uncategorizable = Category.objects.get_or_create(
             name=UNCATEGORIZABLE_TRANSACTION_CATEGORY_NAME
         )[0]
@@ -104,3 +109,15 @@ class CategoryKeywordCreateView(CreateView):
         if next_url:
             return "%s" % (next_url)
         return str(self.success_url)
+
+
+class DashboardListView(ListView):
+    model = Transaction
+    template_name = "dashboard.html"
+    context_object_name = "transactions"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        context["monthly_data"] = get_monthly_data()
+        return context
