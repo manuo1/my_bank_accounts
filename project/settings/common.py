@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "authentication",
     "bank_account_statements",
     "categorization",
+    "current_month",
 ]
 
 

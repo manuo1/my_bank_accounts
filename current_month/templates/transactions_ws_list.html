@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a href="{% url 'create_transaction_ws' %}" class="btn btn-primary">Obtenir les données sur le site de la banque</a>
+
+
+{% for transaction in transactions %}
+<ul class="list-group list-group-horizontal">
+
+    <li class="list-group-item">{{ statement }}</li>
+
+</ul>
+{% endfor %}
+
+{% endblock %}

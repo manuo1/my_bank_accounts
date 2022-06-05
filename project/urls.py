@@ -11,6 +11,7 @@ urlpatterns = [
     path("statements/", include("bank_account_statements.urls")),
     path("transactions/", include("categorization.urls")),
     path("dashboard/", DashboardListView.as_view(), name="dashboard"),
+    path("current_month/", include("current_month.urls")),
 ]
 
 # Add url to media files during development
