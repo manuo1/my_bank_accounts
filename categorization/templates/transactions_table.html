@@ -14,7 +14,7 @@
 
         {% for transaction in transactions %}
         <tr
-            class="table-{% if transaction.statement.bank.name == 'Crédit Agricole' %}success{% else %}danger{% endif %}">
+            class="table-{% if transaction.statement.bank.name == 'Crédit Agricole' %}success{% elif transaction.statement.bank.name == 'Crédit Mutuel' %}danger{% else %}warning{% endif %}">
             <td class="text-center  m-0 p-0">
                 {% include "transactions_table_row_column_toogle_uncategorizable.html" %}
             </td>

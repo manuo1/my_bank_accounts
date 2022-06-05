@@ -80,3 +80,28 @@ def get_website_bank_transactions_in_raw_transactions(raw_website_bank_transacti
         )
         website_bank_transactions.append(website_bank_transaction)
     return website_bank_transactions
+
+
+def get_transaction_label_in_website_bank_transaction(website_bank_transaction):
+    label = (
+        website_bank_transaction.libelleTypeOperation
+        + " "
+        + website_bank_transaction.libelleOperation
+        + " "
+        + website_bank_transaction.libelleComplementaire
+        + " "
+        + website_bank_transaction.referenceMandat
+        + " "
+        + website_bank_transaction.idCreancier
+        + " "
+        + website_bank_transaction.libelleCash1
+        + " "
+        + website_bank_transaction.libelleCash2
+        + " "
+        + website_bank_transaction.idCarte
+        + " "
+        + website_bank_transaction.referenceClient
+    )
+    while "  " in label:
+        label = label.replace("  ", " ")
+    return label

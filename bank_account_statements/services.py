@@ -35,10 +35,12 @@ def common_date_format(date):
 
 
 def transaction_extended_label(label, custom_label, value, date, statement_bank_name):
-    if label.split()[0].lower() in USELESS_WORDS:
-        label = " ".join([w for w in label.split()[1:]])
-    if custom_label:
-        label = f"{custom_label} {label}"
+    label = label
+    if label:
+        if label.split()[0].lower() in USELESS_WORDS:
+            label = " ".join([w for w in label.split()[1:]])
+        if custom_label:
+            label = f"{custom_label} {label}"
     return f"{unaccent(label)} {value} {common_date_format(date)} {unaccent(statement_bank_name)}"
 
 

@@ -1,44 +1,27 @@
 from trace import Trace
 from bank_account_statements.models import Transaction
+from bank_account_statements.services import transaction_extended_label
+from categorization.mutators import update_transactions_category
 from current_month.selectors import get_transactions_ws_list
+from current_month.services import get_transaction_label_in_website_bank_transaction
 
 
 def create_transactions_with_bank_web_site_data():
     Transaction.objects.filter(statement__isnull=True).delete()
-    transactions_ws = get_transactions_ws_list()
-
-
-# class Transaction(models.Model):
-#     statement = models.ForeignKey(
-#         Statement, blank=True, null=True, on_delete=models.CASCADE
-#     )
-#     date = models.DateField()
-#     label = models.CharField(max_length=255)
-#     value = models.DecimalField(max_digits=20, decimal_places=2)
-#     category = models.ForeignKey(
-#         Category, blank=True, null=True, on_delete=models.SET_NULL
-#     )
-#     extended_label = models.CharField(max_length=255, blank=True)
-#     custom_label = models.CharField(max_length=255, blank=True)
-
-
-# dateOperation ="May 10, 2022, 12:00:00 AM"
-# dateValeur ="May 10, 2022, 12:00:00 AM"
-# typeOperation ="6"
-# codeTypeOperation ="26"
-# familleTypeOperation ="6"
-# libelleOperation ="WEB OUDOT ROMANE temp pb google"
-# libelleTypeOperation ="VIREMENT EMIS           "
-# montant =-71.62
-# idDevise = "EUR"
-# libelleDevise ="€"
-# libelleComplementaire ="temp pb google"
-# referenceMandat =""
-# idCreancier =""
-# libelleCash1 =""
-# libelleCash2 =""
-# idCarte =""
-# indexCarte =-1
-# referenceClient ="temp pb google"
-# pictogrammeCSS ="npc-transfer"
-# fitid ="6792431482362"
+    website_bank_transactions = get_transactions_ws_list()
+    transactions_instance_list = []
+    for website_bank_transaction in website_bank_transactions:
+        label = get_transaction_label_in_website_bank_transaction(
+            website_bank_transaction
+        )
+        date = website_bank_transaction.dateOperation.date()
+        value = website_bank_transaction.montant
+        transaction = Transaction(
+            date=date,
+            label=label,
+            value=value,
+            extended_label=transaction_extended_label(label, "", value, date, ""),
+        )
+        transactions_instance_list.append(transaction)
+    Transaction.objects.bulk_create(transactions_instance_list)
+    update_transactions_category()

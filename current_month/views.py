@@ -4,32 +4,14 @@ from categorization.models import Category
 from current_month.constants import CREDIT_AGRICOLE_WEB_SITE_URL
 from current_month.forms import BankWebSiteDataForm
 
-from current_month.models import BankWebSiteData, TransactionWithoutStatement
-from current_month.mutators import create_transactions_with_bank_web_site_data
+from current_month.models import BankWebSiteData
 from current_month.selectors import get_api_url
-
-
-class TransactionWsListView(ListView):
-    model = TransactionWithoutStatement
-    template_name = "transactions_ws_list.html"
-    context_object_name = "transactions"
-    ordering = "date", "label"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # a suprimer par la suite
-        create_transactions_with_bank_web_site_data()
-
-        context["categories"] = Category.objects.all()
-        context["current_url"] = self.request.get_full_path
-        return context
 
 
 class TransactionWSCreateView(CreateView):
     model = BankWebSiteData
     form_class = BankWebSiteDataForm
-    success_url = reverse_lazy("transactions_ws_list")
+    success_url = reverse_lazy("transactions_list", args=["all"])
     template_name = "raw_bank_data_input.html"
 
     def get_success_url(self):

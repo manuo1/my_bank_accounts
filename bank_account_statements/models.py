@@ -66,7 +66,9 @@ post_save.connect(statement_post_save, sender=Statement)
 
 
 class Transaction(models.Model):
-    statement = models.ForeignKey(Statement, on_delete=models.CASCADE)
+    statement = models.ForeignKey(
+        Statement, null=True, blank=True, on_delete=models.CASCADE
+    )
     date = models.DateField()
     label = models.CharField(max_length=255)
     value = models.DecimalField(max_digits=20, decimal_places=2)
@@ -83,12 +85,15 @@ class Transaction(models.Model):
         return f"{self.statement} - {common_date_format(self.date)} | {self.label} | {self.value}"
 
     def save(self, *args, **kwargs):
+        bank_name = ""
+        if self.statement:
+            bank_name = self.statement.bank.name
         self.extended_label = transaction_extended_label(
             label=self.label,
             custom_label=self.custom_label,
             value=self.value,
             date=self.date,
-            statement_bank_name=self.statement.bank.name,
+            statement_bank_name=bank_name,
         )
         super().save(*args, **kwargs)
         update_transactions_category()
