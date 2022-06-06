@@ -1,5 +1,6 @@
 from django.db.models import Sum, Value, DateField
-from datetime import date
+from django.utils import timezone
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from bank_account_statements.models import Transaction
 from categorization.constants import BASE_SALARY_VALUE, SALARIES_CATEGORY_NAME
@@ -30,6 +31,7 @@ def get_monthly_data():
         if salary_payment_transaction:
             first_salary_dates_of_the_month.append(salary_payment_transaction.date)
 
+    first_salary_dates_of_the_month.append((timezone.now() + timedelta(days=1)).date())
     first_salary_dates_of_the_month.sort()
     for index, start_date in enumerate(first_salary_dates_of_the_month):
         if index < len(first_salary_dates_of_the_month) - 1:

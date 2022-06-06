@@ -48,3 +48,6 @@ USELESS_WORDS_AT_THE_START_OF_THE_LABEL = [
     "virement",
     "vir",
 ]
+
+
+STARTING_BANK_BALANCE = 867.2

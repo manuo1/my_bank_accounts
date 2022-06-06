@@ -1,6 +1,8 @@
+from decimal import Decimal
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from bank_account_statements.constants import STARTING_BANK_BALANCE
 from bank_account_statements.models import Transaction
 from categorization.constants import (
     SALARIES_CATEGORY_NAME,
@@ -127,4 +129,8 @@ class DashboardListView(ListView):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         context["monthly_data"] = get_monthly_data()
+        context["balance_value"] = sum(
+            [t.value for t in Transaction.objects.all()]
+        ) + Decimal(STARTING_BANK_BALANCE)
+        context["balance_date"] = Transaction.objects.order_by("date").last().date
         return context
