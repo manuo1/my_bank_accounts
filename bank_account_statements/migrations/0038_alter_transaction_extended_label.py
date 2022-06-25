@@ -6,7 +6,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bank_account_statements', '0037_transaction_category_transaction_extended_label'),
+        (
+            'bank_account_statements',
+            '0037_transaction_category_transaction_extended_label',
+        ),
     ]
 
     operations = [

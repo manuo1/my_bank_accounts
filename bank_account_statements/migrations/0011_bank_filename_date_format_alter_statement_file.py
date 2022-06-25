@@ -18,6 +18,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='statement',
             name='file',
-            field=models.FileField(max_length=500, unique=True, upload_to='bank_statements'),
+            field=models.FileField(
+                max_length=500, unique=True, upload_to='bank_statements'
+            ),
         ),
     ]

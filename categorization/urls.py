@@ -19,7 +19,11 @@ urlpatterns = [
         TransactionCustomLabelUpdateView.as_view(),
         name="edit_transaction_custom_label",
     ),
-    path("category/create/", CategoryCreateView.as_view(), name="category_create"),
+    path(
+        "category/create/",
+        CategoryCreateView.as_view(),
+        name="category_create",
+    ),
     path(
         "category_keyword/add_with_transaction_label/<int:transaction_id>",
         CategoryKeywordCreateView.as_view(),

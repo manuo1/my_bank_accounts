@@ -16,4 +16,6 @@ urlpatterns = [
 
 # Add url to media files during development
 if config("ENVIRONMENT") == "development":
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )

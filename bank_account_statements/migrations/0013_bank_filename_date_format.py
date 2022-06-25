@@ -13,6 +13,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='bank',
             name='filename_date_format',
-            field=models.CharField(choices=[('fr', 'Jours Mois'), ('en', 'Mois Jours')], default='fr', max_length=2),
+            field=models.CharField(
+                choices=[('fr', 'Jours Mois'), ('en', 'Mois Jours')],
+                default='fr',
+                max_length=2,
+            ),
         ),
     ]

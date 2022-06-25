@@ -8,6 +8,7 @@ from categorization.mutators import update_transactions_category
 class Category(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
+    transactions_are_fixed_monthly_costs = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["name"]
@@ -39,8 +40,10 @@ def category_keyword_post_delete(sender, instance, *args, **kwargs):
     transactions with associated category will have their category set to none
     and apply the categorization again
     """
-    modified_transactions = bank_account_statements.models.Transaction.objects.filter(
-        category=instance.category
+    modified_transactions = (
+        bank_account_statements.models.Transaction.objects.filter(
+            category=instance.category
+        )
     )
     for transaction in modified_transactions:
         transaction.category = None

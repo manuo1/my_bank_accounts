@@ -34,7 +34,9 @@ def common_date_format(date):
         return date.strftime(DATE_FORMAT)
 
 
-def transaction_extended_label(label, custom_label, value, date, statement_bank_name):
+def transaction_extended_label(
+    label, custom_label, value, date, statement_bank_name
+):
     label = label
     if label:
         if label.split()[0].lower() in USELESS_WORDS:
@@ -216,7 +218,9 @@ class CreditMutuelPdfStatement:
             return False
 
     def _row_is_balance_row(self, row):
-        return CM_BALANCE_KEY_WORDS in row[0] and self._string_is_date(row[0][-10:])
+        return CM_BALANCE_KEY_WORDS in row[0] and self._string_is_date(
+            row[0][-10:]
+        )
 
     def _get_start_and_end_rows(self, all_rows):
         start_and_end_rows = []

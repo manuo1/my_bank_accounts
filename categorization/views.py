@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView
 from bank_account_statements.constants import STARTING_BANK_BALANCE
 from bank_account_statements.models import Transaction
 from categorization.constants import (
@@ -17,7 +17,11 @@ from categorization.models import Category, CategoryKeyword
 from categorization.mutators import (
     toggle_between_none_and_uncategorisable as toggle_category,
 )
-from categorization.selectors import get_monthly_data
+from categorization.selectors import (
+    get_balance,
+    get_balance_after_fixed_costs,
+    get_monthly_data,
+)
 
 
 class TransactionListView(ListView):
@@ -50,14 +54,18 @@ class TransactionListView(ListView):
         date_end = self.request.GET.get("date_end")
         category_value = self.kwargs.get("category_value", "all")
         if category_value.isdigit():
-            queryset = self.model.objects.filter(category__id=int(category_value))
+            queryset = self.model.objects.filter(
+                category__id=int(category_value)
+            )
         if category_value == "all":
             queryset = self.model.objects.all()
         if category_value == "uncategorized":
             queryset = self.model.objects.filter(category__isnull=True)
         if search:
             queryset = queryset.filter(
-                extended_label__icontains=search.replace(",", ".").replace("_", "/")
+                extended_label__icontains=search.replace(",", ".").replace(
+                    "_", "/"
+                )
             )
         if date_start:
             queryset = queryset.filter(date__gte=date_start)
@@ -129,8 +137,6 @@ class DashboardListView(ListView):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         context["monthly_data"] = get_monthly_data()
-        context["balance_value"] = sum(
-            [t.value for t in Transaction.objects.all()]
-        ) + Decimal(STARTING_BANK_BALANCE)
-        context["balance_date"] = Transaction.objects.order_by("date").last().date
+        context["balance"] = get_balance()
+        context["balance_after_fixed_costs"] = get_balance_after_fixed_costs()
         return context

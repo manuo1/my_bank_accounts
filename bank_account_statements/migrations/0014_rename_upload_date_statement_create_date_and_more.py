@@ -18,12 +18,18 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='bank',
             name='filename_date_format',
-            field=models.CharField(choices=[('fr', 'Jours / Mois'), ('en', 'Mois / Jours')], default='fr', max_length=2),
+            field=models.CharField(
+                choices=[('fr', 'Jours / Mois'), ('en', 'Mois / Jours')],
+                default='fr',
+                max_length=2,
+            ),
         ),
         migrations.AlterField(
             model_name='statement',
             name='file',
-            field=models.FileField(max_length=500, upload_to='bank_statements'),
+            field=models.FileField(
+                max_length=500, upload_to='bank_statements'
+            ),
         ),
         migrations.AlterField(
             model_name='statement',

@@ -14,6 +14,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='transaction',
             name='statement',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='bank_account_statements.statement'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='bank_account_statements.statement',
+            ),
         ),
     ]

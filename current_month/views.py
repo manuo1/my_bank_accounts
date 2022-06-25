@@ -22,6 +22,6 @@ class TransactionWSCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["ca_url"] = CREDIT_AGRICOLE_WEB_SITE_URL
-        context["ca_api_url"] = get_api_url()
+        context["bank_website_url"] = CREDIT_AGRICOLE_WEB_SITE_URL
+        context["bank_website_api_url"] = get_api_url()
         return context

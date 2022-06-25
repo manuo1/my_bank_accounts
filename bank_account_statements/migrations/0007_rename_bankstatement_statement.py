@@ -6,7 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bank_account_statements', '0006_bankstatement_content_inserted_into_database'),
+        (
+            'bank_account_statements',
+            '0006_bankstatement_content_inserted_into_database',
+        ),
     ]
 
     operations = [

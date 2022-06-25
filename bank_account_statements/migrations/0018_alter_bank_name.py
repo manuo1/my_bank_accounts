@@ -13,6 +13,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='bank',
             name='name',
-            field=models.CharField(choices=[('Crédit Mutuel', 'Crédit Agricole'), ('Crédit Agricole', 'Crédit Agricole')], default='Crédit Agricole', max_length=15, unique=True),
+            field=models.CharField(
+                choices=[
+                    ('Crédit Mutuel', 'Crédit Agricole'),
+                    ('Crédit Agricole', 'Crédit Agricole'),
+                ],
+                default='Crédit Agricole',
+                max_length=15,
+                unique=True,
+            ),
         ),
     ]

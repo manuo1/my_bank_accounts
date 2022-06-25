@@ -15,6 +15,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='transaction',
             name='category',
-            field=models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.SET_DEFAULT, to='categorization.category'),
+            field=models.ForeignKey(
+                blank=True,
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.SET_DEFAULT,
+                to='categorization.category',
+            ),
         ),
     ]

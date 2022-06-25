@@ -2,8 +2,9 @@
 
 {% block content %}
 <h2>Données copiées sur le site de la banque :</h2>
-<a href="{{ca_url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Site Credit Agricole</a>
-<a href="{{ca_api_url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">PAGE API</a>
+<a href="{{bank_website_url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Site Credit
+  Agricole</a>
+<a href="{{bank_website_api_url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">PAGE API</a>
 
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}

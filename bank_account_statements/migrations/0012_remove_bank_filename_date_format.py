@@ -6,7 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bank_account_statements', '0011_bank_filename_date_format_alter_statement_file'),
+        (
+            'bank_account_statements',
+            '0011_bank_filename_date_format_alter_statement_file',
+        ),
     ]
 
     operations = [

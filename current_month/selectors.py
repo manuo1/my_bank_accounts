@@ -6,12 +6,11 @@ from current_month.constants import (
     API_PARAMS_START_DATE as start_date,
     API_PARAMS_END_DATE as end_date,
     API_CONSTANT_PARAMS_END as const_end,
-    BANK_DATA_SPLITER,
 )
 import bank_account_statements
 import current_month.models
 from current_month.services import (
-    get_raw_website_bank_transactions_in_bank_data,
+    get_website_bank_transactions_in_bank_data,
     get_website_bank_transactions_in_raw_transactions,
 )
 
@@ -36,10 +35,14 @@ def get_api_url():
     return url
 
 
-def get_transactions_ws_list():
+def get_transactions_without_statement_list():
     bank_data = current_month.models.BankWebSiteData.objects.last().data
-    raw_transactions_ws_list = get_raw_website_bank_transactions_in_bank_data(bank_data)
-    website_bank_transactions = get_website_bank_transactions_in_raw_transactions(
-        raw_transactions_ws_list
+    raw_transactions_ws_list = get_website_bank_transactions_in_bank_data(
+        bank_data
+    )
+    website_bank_transactions = (
+        get_website_bank_transactions_in_raw_transactions(
+            raw_transactions_ws_list
+        )
     )
     return website_bank_transactions

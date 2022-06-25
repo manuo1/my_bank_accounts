@@ -51,8 +51,12 @@ class Statement(models.Model):
         return f"{common_date_format(self.date)} - {self.bank.name}"
 
     def save(self, *args, **kwargs):
-        self.date = get_date_in_filename(self.file.name, self.bank.filename_date_format)
-        if not Statement.objects.filter(date=self.date, bank=self.bank).exists():
+        self.date = get_date_in_filename(
+            self.file.name, self.bank.filename_date_format
+        )
+        if not Statement.objects.filter(
+            date=self.date, bank=self.bank
+        ).exists():
             super().save(*args, **kwargs)
 
 

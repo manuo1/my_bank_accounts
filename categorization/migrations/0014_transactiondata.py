@@ -15,7 +15,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TransactionData',
             fields=[
-                ('my_data', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='bank_account_statements.transaction')),
+                (
+                    'my_data',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        serialize=False,
+                        to='bank_account_statements.transaction',
+                    ),
+                ),
             ],
         ),
     ]

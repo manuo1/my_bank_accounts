@@ -6,7 +6,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bank_account_statements', '0022_remove_transaction_category_and_more'),
+        (
+            'bank_account_statements',
+            '0022_remove_transaction_category_and_more',
+        ),
     ]
 
     operations = [

@@ -8,13 +8,21 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('categorization', '0019_alter_categorykeyword_options'),
-        ('bank_account_statements', '0040_alter_bank_options_alter_statement_options_and_more'),
+        (
+            'bank_account_statements',
+            '0040_alter_bank_options_alter_statement_options_and_more',
+        ),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='transaction',
             name='category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='categorization.category'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to='categorization.category',
+            ),
         ),
     ]

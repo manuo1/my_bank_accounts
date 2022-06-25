@@ -14,7 +14,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='categorykeyword',
             name='category',
-            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to='categorization.category'),
+            field=models.ForeignKey(
+                default='',
+                on_delete=django.db.models.deletion.CASCADE,
+                to='categorization.category',
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(

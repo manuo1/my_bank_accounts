@@ -34,7 +34,13 @@ CA_NEW_BALANCE_KEY_WORD = "Nouveau solde"
 # specific to data extraction in credit mutuel statements
 ##############################################################################
 
-CM_COLUMNS_LABELS = ["Date", "Date valeur", "Opération", "Débit EUROS", "Crédit EUROS"]
+CM_COLUMNS_LABELS = [
+    "Date",
+    "Date valeur",
+    "Opération",
+    "Débit EUROS",
+    "Crédit EUROS",
+]
 CM_BALANCE_KEY_WORDS = "SOLDE"
 CM_ROWS_DATE_FORMAT = "%d/%m/%Y"
 

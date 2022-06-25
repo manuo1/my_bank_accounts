@@ -6,7 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('categorization', '0007_rename_category_keywords_categorykeywords_category'),
+        (
+            'categorization',
+            '0007_rename_category_keywords_categorykeywords_category',
+        ),
     ]
 
     operations = [

@@ -13,6 +13,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='category',
             name='periodicity',
-            field=models.CharField(choices=[('unique', 'Unique'), ('monthly', 'Mensuel'), ('once_a_year', 'Une fois par an'), ('twice_a_year', 'Deux fois par an')], default='unique', max_length=50),
+            field=models.CharField(
+                choices=[
+                    ('unique', 'Unique'),
+                    ('monthly', 'Mensuel'),
+                    ('once_a_year', 'Une fois par an'),
+                    ('twice_a_year', 'Deux fois par an'),
+                ],
+                default='unique',
+                max_length=50,
+            ),
         ),
     ]

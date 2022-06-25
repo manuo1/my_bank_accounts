@@ -8,7 +8,10 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('categorization', '0004_periodicity'),
-        ('bank_account_statements', '0020_statement_category_statement_periodicity'),
+        (
+            'bank_account_statements',
+            '0020_statement_category_statement_periodicity',
+        ),
     ]
 
     operations = [
@@ -23,11 +26,21 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='transaction',
             name='category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='categorization.category'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to='categorization.category',
+            ),
         ),
         migrations.AddField(
             model_name='transaction',
             name='periodicity',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='categorization.periodicity'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to='categorization.periodicity',
+            ),
         ),
     ]
