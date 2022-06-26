@@ -14,7 +14,7 @@ from categorization.constants import (
 )
 from categorization.models import Category
 from categorization.constants import (
-    QUANTITY_OF_MONTHS_DISPLAYED_IN_THE_DASHBOARD as month_qty,
+    QUANTITY_OF_MONTHS_DISPLAYED_IN_THE_DASHBOARD as MONTH_QTY,
 )
 
 
@@ -36,98 +36,83 @@ def get_first_salary_dates_of_the_month(month_qty):
             .first()
         )
         if salary_payment_transaction:
-            first_salary_dates_of_the_month.append(
-                salary_payment_transaction.date
-            )
+            first_salary_dates_of_the_month.append(salary_payment_transaction.date)
 
-    first_salary_dates_of_the_month.append(
-        (timezone.now() + timedelta(days=1)).date()
-    )
+    first_salary_dates_of_the_month.append((timezone.now() + timedelta(days=1)).date())
     first_salary_dates_of_the_month.sort()
     return first_salary_dates_of_the_month
 
 
 def get_monthly_data():
     monthly_data = []
-    first_salary_dates_of_the_month = get_first_salary_dates_of_the_month(
-        month_qty
-    )
-    for index, start_date in enumerate(first_salary_dates_of_the_month):
-        if index < len(first_salary_dates_of_the_month) - 1:
-            end_date = first_salary_dates_of_the_month[index + 1]
+    first_salary_dates_of_the_month = get_first_salary_dates_of_the_month(MONTH_QTY)
+    for index, start_date in enumerate(first_salary_dates_of_the_month[:-1]):
+        end_date = first_salary_dates_of_the_month[index + 1]
 
-            data = Category.objects.filter(
-                transaction__date__gte=start_date,
-                transaction__date__lt=end_date,
-            ).annotate(
-                sum_value=Sum("transaction__value"),
-                month=Value(start_date, DateField()),
-            )
-            monthly_data.append(
-                {
-                    "displayed_date": end_date.replace(day=1),
-                    "first_date": start_date,
-                    "last_date": end_date,
-                    "data": data,
-                    "total_value": sum([c.sum_value for c in data]),
-                }
-            )
+        data = Category.objects.filter(
+            transaction__date__gte=start_date,
+            transaction__date__lt=end_date,
+        ).annotate(
+            sum_value=Sum("transaction__value"),
+            month=Value(start_date, DateField()),
+        )
+        monthly_data.append(
+            {
+                "displayed_date": end_date.replace(day=1),
+                "first_date": start_date,
+                "last_date": end_date,
+                "data": data,
+                "total_value": sum([c.sum_value for c in data]),
+            }
+        )
     return monthly_data
 
 
 def get_balance_after_fixed_costs():
     balance_after_fixed_costs = {
-        "monthly": None,
-        "weekly": None,
-        "daily": None,
+        "monthly": 0,
+        "weekly": 0,
+        "daily": 0,
     }
-    fixed_cost_calculation_period = get_first_salary_dates_of_the_month(
-        FIXED_COST_MONTHS_QTY + 2
-    )
-    fixed_cost_transactions = Category.objects.filter(
-        transaction__date__gte=fixed_cost_calculation_period[
-            -(2 + FIXED_COST_MONTHS_QTY)
-        ],
-        transaction__date__lt=fixed_cost_calculation_period[-2],
-        transactions_are_fixed_monthly_costs=True,
-    ).annotate(
-        sum_value=Sum("transaction__value"),
-    )
-    fixed_cost_average = (
-        sum([c.sum_value for c in fixed_cost_transactions])
-        / FIXED_COST_MONTHS_QTY
-    )
-    monthly_transactions_excluding_fixed_costs = Category.objects.filter(
-        transaction__date__gte=fixed_cost_calculation_period[-2],
+    salary_date_list = get_first_salary_dates_of_the_month(FIXED_COST_MONTHS_QTY + 2)
+    month_fixed_costs = []
+    for index, first_salary_date in enumerate(salary_date_list[:-1]):
+        month_fixed_costs.append(
+            Category.objects.filter(
+                transaction__date__gte=first_salary_date,
+                transaction__date__lt=salary_date_list[index + 1],
+                transactions_are_fixed_monthly_costs=True,
+            ).aggregate(Sum("transaction__value"))["transaction__value__sum"]
+            * -1
+        )
+    max_monthly_fixed_cost = max(month_fixed_costs)
+
+    current_month_expenses_excluding_fixed_costs = Category.objects.filter(
+        transaction__date__gte=salary_date_list[-2],
         transactions_are_fixed_monthly_costs=False,
-    ).annotate(
-        sum_value=Sum("transaction__value"),
-    )
-    monthly_expenses_excluding_fixed_costs = sum(
-        [c.sum_value for c in monthly_transactions_excluding_fixed_costs]
-    )
+    ).aggregate(Sum("transaction__value"))["transaction__value__sum"]
+
     balance_after_fixed_costs = {
-        "monthly": monthly_expenses_excluding_fixed_costs + fixed_cost_average
+        "monthly": current_month_expenses_excluding_fixed_costs - max_monthly_fixed_cost
     }
-    estimated_date_of_next_salary = fixed_cost_calculation_period[
-        -2
-    ] + relativedelta(months=1)
+    estimated_date_of_next_salary = salary_date_list[-2] + relativedelta(months=1)
     days_until_next_salary = (
         estimated_date_of_next_salary - datetime.now().date()
     ).days
-    balance_after_fixed_costs["daily"] = (
-        balance_after_fixed_costs["monthly"] / days_until_next_salary
-    )
-    balance_after_fixed_costs["weekly"] = (
-        balance_after_fixed_costs["monthly"] / days_until_next_salary
-    ) * 7
+    if balance_after_fixed_costs["monthly"] >= 0:
+        balance_after_fixed_costs["daily"] = (
+            balance_after_fixed_costs["monthly"] / days_until_next_salary
+        )
+        balance_after_fixed_costs["weekly"] = (
+            balance_after_fixed_costs["monthly"] / days_until_next_salary
+        ) * 7
 
     return balance_after_fixed_costs
 
 
 def get_balance():
     return {
-        "value": sum([t.value for t in Transaction.objects.all()])
+        "value": Transaction.objects.all().aggregate(Sum("value"))["value__sum"]
         + Decimal(STARTING_BANK_BALANCE),
         "date": Transaction.objects.order_by("date").last().date,
     }
