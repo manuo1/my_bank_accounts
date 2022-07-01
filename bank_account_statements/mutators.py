@@ -16,6 +16,7 @@ def create_transaction_with_statement(instance):
 
     if instance.bank.name == CREDIT_AGRICOLE:
         pdf_statement = CreditAgricolPdfStatement()
+
     for transaction in pdf_statement.get_transactions(instance.file.path):
         transactions_instance_list.append(
             bank_account_statements.models.Transaction(

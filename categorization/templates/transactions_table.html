@@ -20,7 +20,7 @@
             </td>
             <td class="text-center">{{ transaction.date|date:"d/m/Y" }}</td>
             <td class="text-start" data-bs-toggle="tooltip" title="{{ transaction.label }}">
-                {{ transaction.label|truncatechars:40 }}
+                {{ transaction.label|truncatechars:90 }}
             </td>
             <td class="text-start" data-bs-toggle="tooltip" title="{{ transaction.custom_label }}">
                 {% include "transactions_table_row_column_custom_label.html" %}
